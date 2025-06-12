@@ -35,20 +35,23 @@ class PasswordManagerApp(QWidget):
         toolbar.setContentsMargins(0, 0, 0, 0)
 
         # Actions
+        new_act = QAction(QIcon.fromTheme("document-new"), "New", self)
         load_act = QAction(QIcon.fromTheme("document-open"), "Load", self)
         save_act = QAction(QIcon.fromTheme("document-save"), "Save", self)
         save_as_act = QAction(QIcon.fromTheme("document-save-as"), "Save As", self)
         add_act = QAction(QIcon.fromTheme("list-add"), "Add", self)
         del_act = QAction(QIcon.fromTheme("list-remove"), "Delete", self)
-        for act in (load_act, save_act, save_as_act, add_act, del_act):
+        for act in (new_act, load_act, save_act, save_as_act, add_act, del_act):
             toolbar.addAction(act)
 
         self.layout.addWidget(toolbar)
 
         self.list_widget = QListWidget()
+        self.list_widget.setSortingEnabled(True)
+        
         self.layout.addWidget(self.list_widget)
 
-        
+        new_act.triggered.connect(self.new_file)
         load_act.triggered.connect(self.load_file)
         save_act.triggered.connect(self.save_file)
         save_as_act.triggered.connect(self.save_file_as)
@@ -58,6 +61,24 @@ class PasswordManagerApp(QWidget):
 
 
 
+    def new_file(self):
+        if self.is_modified:
+            reply = QMessageBox.question(
+                self,
+                "Unsaved Changes",
+                "The current file is not saved. Are you sure you want to create a new one?",
+                QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel
+            )
+
+            if reply == QMessageBox.StandardButton.Save:
+                self.save_file()
+            elif reply == QMessageBox.StandardButton.Cancel:
+                return  
+
+        self.api.reset()
+        self.current_filepath = None
+        self.is_modified = False
+        self.refresh_list()
 
     def refresh_list(self):
         self.list_widget.clear()
@@ -65,6 +86,17 @@ class PasswordManagerApp(QWidget):
             self.list_widget.addItem(entry["name"])
 
     def load_file(self):
+        if self.is_modified:
+            reply = QMessageBox.question(
+                self,
+                "Unsaved Changes",
+                "The current file is not saved. Are you sure you want to load other file?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+
+            if reply == QMessageBox.StandardButton.No:
+                return 
+
         path, _ = QFileDialog.getOpenFileName(
             self, "Open .pass file", "", "Pass Files (*.pass);;All Files (*)"
         )
@@ -198,4 +230,27 @@ class PasswordManagerApp(QWidget):
             items = self.list_widget.findItems(updated_entry["name"], Qt.MatchFlag.MatchExactly)
             if items:
                 self.list_widget.setCurrentItem(items[0])
+
+    def closeEvent(self, event):
+        if self.is_modified:
+            reply = QMessageBox.question(
+                self,
+                "Unsaved Changes",
+                "The current file is not saved. Are you sure you want to exit?",
+                QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel
+
+            )
+
+            if reply == QMessageBox.StandardButton.Save:
+                self.save_file()
+                event.accept()
+                
+            elif reply == QMessageBox.StandardButton.Discard:
+                event.accept()
+            else:
+                event.ignore()
+        else:
+            event.accept()
+                
+
 

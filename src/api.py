@@ -7,6 +7,10 @@ class PasswordManagerAPI:
     def __init__(self, data=None):
         self.data = data if data else {"metadata": {}, "entries": []}
         self.key = None
+    
+    def reset(self):
+        self.data = {"metadata": {}, "entries": []}
+        self.key = None
 
     def _derive_key(self, password):
         digest = hashlib.sha256(password.encode()).digest()
@@ -73,3 +77,4 @@ class PasswordManagerAPI:
             return True
         except Exception:
             return False
+  

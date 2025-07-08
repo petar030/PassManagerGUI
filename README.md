@@ -28,3 +28,9 @@
 - Easy-to-use interface for adding, editing, and removing entries
 
 ---
+
+## 🧩 Installation
+
+You can download the prebuilt executable from the [Releases](https://github.com/petar030/PassManagerGUI/releases) page.
+ 
+---

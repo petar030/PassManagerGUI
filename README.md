@@ -15,8 +15,8 @@
 
 ### 🪟 Windows
 
-<img src="assets/images/Windows1.PNG" width="400"/>
 <img src="assets/images/Windows2.PNG" width="400"/>
+<img src="assets/images/Windows1.PNG" width="400"/>
 
 ---
 

@@ -10,13 +10,13 @@
 
 ### 🐧 Linux
 
-![Linux Screenshot 1](assets/images/Linux1.png)
-![Linux Screenshot 2](assets/images/Linux2.png)
+<img src="assets/images/Linux1.png" width="400"/>
+<img src="assets/images/Linux2.png" width="400"/>
 
 ### 🪟 Windows
 
-![Windows Screenshot 1](assets/images/Windows2.PNG)
-![Windows Screenshot 2](assets/images/Windows1.PNG)
+<img src="assets/images/Windows1.PNG" width="400"/>
+<img src="assets/images/Windows2.PNG" width="400"/>
 
 ---
 

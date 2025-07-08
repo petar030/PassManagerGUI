@@ -15,9 +15,9 @@ from api import PasswordManagerAPI
 from dialogs import PasswordSetupDialog, EntryDetailsDialog
 
 class PasswordManagerApp(QWidget):
-    def __init__(self):
+    def __init__(self, file=None):
         super().__init__()
-        self.setWindowTitle("Offline Password Manager")
+        self.setWindowTitle("PassManager")
         self.resize(600, 400)
 
         self.api = PasswordManagerAPI() 
@@ -58,6 +58,39 @@ class PasswordManagerApp(QWidget):
         add_act.triggered.connect(self.add_entry)
         del_act.triggered.connect(self.delete_entry)
         self.list_widget.itemDoubleClicked.connect(self.show_entry_details)
+
+        if file:
+            path = file
+            
+            if not path.lower().endswith(".pass"):
+                QMessageBox.critical(
+                    self,
+                    "Invalid File",
+                    "Selected file is not a .pass file. Please select a valid .pass file."
+                )
+                return
+
+
+            while True:
+                password, ok = QInputDialog.getText(
+                    self, "Enter Password", "Password:",
+                    QLineEdit.EchoMode.Password
+                )
+
+                if not ok:
+                    QMessageBox.warning(self, "Canceled", "Loading canceled by user.")
+                    return
+
+                if self.api.load_from_file(path, password):
+                    self.current_filepath = path
+                    self.is_modified = False
+                    self.refresh_list()
+                    QMessageBox.information(self, "Success", f"Loaded from {path}")
+                    return
+                else:
+                    QMessageBox.critical(self, "Invalid Password", "Incorrect password. Try again.")
+
+        
 
 
 
@@ -102,6 +135,15 @@ class PasswordManagerApp(QWidget):
         )
         if not path:
             return
+        
+        if not path.lower().endswith(".pass"):
+            QMessageBox.critical(
+                self,
+                "Invalid File",
+                "Selected file is not a .pass file. Please select a valid .pass file."
+            )
+            return
+
 
         while True:
             password, ok = QInputDialog.getText(

@@ -4,6 +4,7 @@ from ui import PasswordManagerApp
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = PasswordManagerApp()
+    initial_file = sys.argv[1] if len(sys.argv) > 1 else None
+    window = PasswordManagerApp(initial_file)
     window.show()
     sys.exit(app.exec())

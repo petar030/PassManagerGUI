@@ -15,8 +15,8 @@
 
 ### 🪟 Windows
 
-![Windows Screenshot 1](assets/images/Windows1.PNG)
-![Windows Screenshot 2](assets/images/Windows2.PNG)
+![Windows Screenshot 1](assets/images/Windows2.PNG)
+![Windows Screenshot 2](assets/images/Windows1.PNG)
 
 ---
 
